@@ -1,0 +1,98 @@
+# ABalone example 
+
+abalone<-read.table('abalone.txt',header = T)
+
+model<-lm(rings~length,data=abalone)
+summary(model)
+
+x <- abalone$length
+y <- abalone$rings
+
+model$coefficients
+b0 <- model$coefficients[1]
+b1 <- model$coefficients[2]
+
+y_hat <- b0 + b1 * x
+
+predict(model)
+
+SStotal <- sum((y - mean(y))^2)
+SSreg <- sum((y_hat - mean(y))^2)
+SSres <- sum((y_hat - y)^2)
+
+SStotal
+SSreg + SSres
+
+R2 <- SSreg / SStotal 
+R2_check <- 1 - SSres / SStotal 
+
+plot(rings~length,data=abalone)
+abline(model)
+
+plot(predict(model), model$residuals)
+
+
+# Analysis of Residuals 
+
+plot(model, which=1)
+plot(model, which=2)
+plot(model, which=3)
+plot(model, which=4)
+plot(model, which=5)
+plot(model, which=6)
+
+# Residual plot analysis 
+# Good Residual plots
+
+x <- 1:200 / 5
+y <- 1 + 2 * x + rnorm(200, sd = 0.15)
+plot(x, y)
+
+model1 <- lm(y ~ x)
+
+abline(model1)
+
+plot(model1, which = 1)
+plot(model1, which = 2)
+
+# Bad Residual plots - violation of linearity 
+
+x <- 1:40 / 5
+y <- 1 + sin(pi / 2 * x) + rnorm(40, sd = 0.25)
+plot(x, y)
+
+model2 <- lm(y ~ x)
+
+abline(model2)
+
+plot(model2, which = 1)
+
+# Bad Residual plots - violation of constant variance  
+
+x <- 1:200
+y <- 1 + 2 * x + x * rnorm(200, sd = 0.5)
+plot(x, y)
+
+model3 <- lm(y ~ x)
+
+abline(model3)
+
+summary(model3)
+
+plot(model3, which = 1)
+
+# Bad Residual plots - violation of normality
+
+x <- 1:300  
+y <- 1 + 2 * x + sample(c(runif(1000, -20, -10), runif(1000, 10, 20)), size = 300)
+# At this time its not normal, but has a center
+
+plot(x, y)
+
+model4 <- lm(y ~ x)
+
+abline(model4)
+
+plot(model4, which = 1)
+plot(model4, which = 2)
+# Nosie is not normal
