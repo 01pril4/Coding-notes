@@ -8,7 +8,7 @@ help(getwd)
 getwd() 
 
 # Set data folder as working directory
-setwd("~/data")
+setwd("~/Downloads/Math2831")
 
 #
 # Example: Market Data 
