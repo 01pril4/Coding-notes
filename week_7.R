@@ -18,16 +18,6 @@ cheese <- read.table("cheese.txt",header = TRUE)
 cheese_mod_0 <- lm(taste~1, data=cheese)
 extractAIC(cheese_mod_0)[2]
 
-#Step 1
-
-
-#Step 2
-
-
-#Step 3
-
-
-
 ## forward, backward and stepwise selection
 #install.packages("MASS")
 library(MASS)
@@ -42,6 +32,19 @@ step$coefficients
 cheese_mod <- lm(taste~Acetic,data=cheese)
 step <- stepAIC(cheese_mod,scope=~Acetic+H2S+Lactic, direction="both")
 step$coefficients
+
+# Mallows' C_p (example from lab test)
+library(leaps)
+cp <- leaps(
+  x = trees[, c("Height", "Girth")],
+  y = trees$Volume,
+  names = c("Height", "Girth"),
+  method = "Cp"
+)
+
+result <- cbind(cp$which, Cp = cp$Cp)
+print(result)
+
 
 ## LASSO 
 #install.packages("glmnet") 
