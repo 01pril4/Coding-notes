@@ -220,3 +220,52 @@ par(mfrow=c(1,1))
 
 AIC(trees_mod,trees_mod2)
 
+# Non linear transformations of predictors 
+
+demo <- read.csv("demo.csv")
+
+# Exponential relationship
+
+plot(y1 ~ x1, data = demo)
+
+model1 <- lm(log(y1) ~ x1, data = demo)
+summary(model1)
+
+plot(y1 ~ x1, data = demo)
+curve(exp(model1$coefficients[1])*exp(model1$coefficients[2]*x), add=TRUE, col = "red")
+
+# Parabolic relationship 
+
+plot(y2 ~ x2, data = demo)
+
+model2 <- lm(y2 ~ x2 + I(x2^2), data = demo)
+summary(model2)
+
+plot(y2 ~ x2, data = demo)
+curve(model2$coefficients[1] + model2$coefficients[2] * x + model2$coefficients[3] * x^2, add=TRUE, col = "blue")
+
+
+# Power relationship 
+
+plot(y3 ~ x3, data = demo)
+
+model3 <- lm(log(y3) ~ log(x3), data = demo)
+summary(model3)
+
+plot(y3 ~ x3, data = demo)
+curve(exp(model3$coefficients[1])*x^model3$coefficients[2], add=TRUE, col = "green")
+
+# Box-Cox transformation 
+
+model4 <- lm(y1 ~ x1, data = demo)
+c<-boxcox(model4, lambda=seq(-2,2,1/10)) 
+
+c$x[!c$y<max(c$y)][1] 
+lambda=c$x[!c$y<max(c$y)] 
+
+plot((y1^lambda-1)/lambda~x1, data = demo)
+
+model5 <- lm((y1^lambda-1)/lambda~x1, data = demo)
+plot(y1 ~ x1, data = demo)
+curve(((model5$coefficients[1] + model5$coefficients[2]*x)*lambda + 1)^(1/lambda), add = TRUE, col = "blue")
+curve(exp(model1$coefficients[1])*exp(model1$coefficients[2]*x), add=TRUE, col = "red")
